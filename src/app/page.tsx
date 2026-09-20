@@ -943,15 +943,19 @@ function FinalCta() {
             Have an idea worth building?
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-            Let&apos;s turn your business challenge or product idea into a scalable
-            digital solution.
+            Let&apos;s turn your business challenge or product idea into a
+            scalable digital solution.
           </p>
           <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button variant="studio" size="studio" onClick={() => setBookingOpen(true)}>
+            <Button
+              variant="studio"
+              size="studio"
+              onClick={() => setBookingOpen(true)}
+            >
               Book a Discovery Call <ArrowRight />
             </Button>
             <Button asChild variant="studioOutline" size="studio">
-              <a href="mailto:hello@gcoam.com">Send an Email</a>
+              <a href="mailto:contact@gcoam.in">Send an Email</a>
             </Button>
           </div>
         </Reveal>
@@ -962,7 +966,7 @@ function FinalCta() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] grid place-items-center bg-black/35 p-3 backdrop-blur-xl sm:p-6"
+          className="fixed inset-0 z-[100] grid place-items-center  p-3 backdrop-blur-sm sm:p-6"
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setBookingOpen(false);
@@ -974,7 +978,7 @@ function FinalCta() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-title"
-              className="relative h-[min(860px,calc(100vh-1.5rem))] w-full max-w-5xl overflow-hidden rounded-xl bg-[radial-gradient(circle_at_50%_0%,color-mix(in_oklab,var(--primary)_38%,transparent),transparent_52%),linear-gradient(145deg,#12152d_0%,#080a14_52%,#11152b_100%)] p-2 shadow-[0_24px_90px_rgba(33,24,110,0.5)] sm:p-4"
+            className="relative h-[min(860px,calc(100vh-1.5rem))] w-full max-w-5xl overflow-hidden rounded-lg shadow-[0_24px_90px_rgba(0,0,0,0.55)]"
           >
             <h2 id="booking-title" className="sr-only">
               Book a discovery call with GCOAM Software
@@ -983,14 +987,14 @@ function FinalCta() {
               type="button"
               aria-label="Close booking dialog"
               onClick={() => setBookingOpen(false)}
-              className="absolute right-4 top-4 z-10 grid size-10 place-items-center rounded-full bg-transparent text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-black/10 text-slate-700 backdrop-blur-sm transition-colors hover:bg-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <X className="size-5" />
             </button>
             <iframe
               title="Book a discovery call with GCOAM Software"
               src="https://calendly.com/contact-gcoam/30min?hide_gdpr_banner=1&background_color=f8fafc&text_color=101828&primary_color=8472fe"
-              className="size-full rounded-lg border-0 bg-slate-50"
+              className="size-full border-0 bg-slate-50"
             />
           </motion.div>
         </motion.div>
