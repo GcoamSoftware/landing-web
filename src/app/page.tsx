@@ -974,7 +974,7 @@ function FinalCta() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-title"
-            className="relative h-[min(860px,calc(100vh-1.5rem))] w-full max-w-5xl overflow-hidden rounded-lg shadow-[0_24px_90px_rgba(0,0,0,0.55)]"
+              className="relative h-[min(860px,calc(100vh-1.5rem))] w-full max-w-5xl overflow-hidden rounded-xl bg-[radial-gradient(circle_at_50%_0%,color-mix(in_oklab,var(--primary)_38%,transparent),transparent_52%),linear-gradient(145deg,#12152d_0%,#080a14_52%,#11152b_100%)] p-2 shadow-[0_24px_90px_rgba(33,24,110,0.5)] sm:p-4"
           >
             <h2 id="booking-title" className="sr-only">
               Book a discovery call with GCOAM Software
@@ -983,14 +983,14 @@ function FinalCta() {
               type="button"
               aria-label="Close booking dialog"
               onClick={() => setBookingOpen(false)}
-              className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-transparent text-slate-700 transition-colors hover:bg-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute right-4 top-4 z-10 grid size-10 place-items-center rounded-full bg-transparent text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <X className="size-5" />
             </button>
             <iframe
               title="Book a discovery call with GCOAM Software"
               src="https://calendly.com/contact-gcoam/30min?hide_gdpr_banner=1&background_color=f8fafc&text_color=101828&primary_color=8472fe"
-              className="size-full border-0 bg-slate-50"
+              className="size-full rounded-lg border-0 bg-slate-50"
             />
           </motion.div>
         </motion.div>
