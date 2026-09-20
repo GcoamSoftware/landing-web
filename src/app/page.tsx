@@ -934,49 +934,55 @@ function FinalCta() {
   return (
     <>
       <section id="contact" className="relative overflow-hidden py-28 lg:py-44">
-      <div className="absolute left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
-      <Reveal className="relative mx-auto max-w-4xl px-5 text-center">
-        <p className="text-xs font-semibold tracking-[0.18em] text-primary">
-          START A CONVERSATION
-        </p>
-        <h2 className="mt-6 text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
-          Have an idea worth building?
-        </h2>
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-          Let's turn your business challenge or product idea into a scalable
-          digital solution.
-        </p>
-        <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button variant="studio" size="studio" onClick={() => setBookingOpen(true)}>
-            Book a Discovery Call <ArrowRight />
-          </Button>
-          <Button asChild variant="studioOutline" size="studio">
-            <a href="mailto:hello@gcoam.com">Send an Email</a>
-          </Button>
-        </div>
-      </Reveal>
+        <div className="absolute left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
+        <Reveal className="relative mx-auto max-w-4xl px-5 text-center">
+          <p className="text-xs font-semibold tracking-[0.18em] text-primary">
+            START A CONVERSATION
+          </p>
+          <h2 className="mt-6 text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
+            Have an idea worth building?
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+            Let&apos;s turn your business challenge or product idea into a scalable
+            digital solution.
+          </p>
+          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button variant="studio" size="studio" onClick={() => setBookingOpen(true)}>
+              Book a Discovery Call <ArrowRight />
+            </Button>
+            <Button asChild variant="studioOutline" size="studio">
+              <a href="mailto:hello@gcoam.com">Send an Email</a>
+            </Button>
+          </div>
+        </Reveal>
       </section>
 
       {bookingOpen && (
-        <div
-          className="fixed inset-0 z-[100] grid place-items-center bg-background/85 p-4 backdrop-blur-sm"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] grid place-items-center bg-background/90 p-3 backdrop-blur-md sm:p-6"
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setBookingOpen(false);
           }}
         >
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-title"
-            className="relative flex h-[min(760px,calc(100vh-2rem))] w-full max-w-3xl flex-col overflow-hidden rounded-lg border border-border bg-card shadow-2xl"
+            className="relative flex h-[min(820px,calc(100vh-2rem))] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_24px_90px_rgba(0,0,0,0.55)]"
           >
-            <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-7">
+            <div className="flex items-center justify-between border-b border-border bg-card px-5 py-4 sm:px-7">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  <span className="size-1.5 rounded-full bg-primary" />
                   Schedule a call
                 </p>
-                <h2 id="booking-title" className="mt-1 text-lg font-semibold">
+                <h2 id="booking-title" className="mt-1.5 text-lg font-semibold sm:text-xl">
                   Let&apos;s find a time to talk.
                 </h2>
               </div>
@@ -984,18 +990,18 @@ function FinalCta() {
                 type="button"
                 aria-label="Close booking dialog"
                 onClick={() => setBookingOpen(false)}
-                className="grid size-9 place-items-center rounded-md border border-border text-xl text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                className="grid size-10 place-items-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
-                ×
+                <X className="size-4" />
               </button>
             </div>
             <iframe
               title="Book a discovery call with GCOAM Software"
-              src="https://calendly.com/contact-gcoam/30min?hide_gdpr_banner=1"
-              className="min-h-0 flex-1 border-0 bg-white"
+              src="https://calendly.com/contact-gcoam/30min?hide_gdpr_banner=1&background_color=f8fafc&text_color=101828&primary_color=8472fe"
+              className="min-h-0 flex-1 border-0 bg-slate-50"
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
     </>
   );
