@@ -914,8 +914,26 @@ function About() {
 }
 
 function FinalCta() {
+  const [bookingOpen, setBookingOpen] = useState(false);
+
+  useEffect(() => {
+    if (!bookingOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setBookingOpen(false);
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.body.style.overflow = "";
+    };
+  }, [bookingOpen]);
+
   return (
-    <section id="contact" className="relative overflow-hidden py-28 lg:py-44">
+    <>
+      <section id="contact" className="relative overflow-hidden py-28 lg:py-44">
       <div className="absolute left-1/2 top-1/2 h-[500px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
       <Reveal className="relative mx-auto max-w-4xl px-5 text-center">
         <p className="text-xs font-semibold tracking-[0.18em] text-primary">
@@ -929,17 +947,57 @@ function FinalCta() {
           digital solution.
         </p>
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-          <Button asChild variant="studio" size="studio">
-            <a href="mailto:hello@gcoam.com">
-              Start a Conversation <ArrowRight />
-            </a>
+          <Button variant="studio" size="studio" onClick={() => setBookingOpen(true)}>
+            Book a Discovery Call <ArrowRight />
           </Button>
           <Button asChild variant="studioOutline" size="studio">
-            <a href="#services">Explore Our Services</a>
+            <a href="mailto:hello@gcoam.com">Send an Email</a>
           </Button>
         </div>
       </Reveal>
-    </section>
+      </section>
+
+      {bookingOpen && (
+        <div
+          className="fixed inset-0 z-[100] grid place-items-center bg-background/85 p-4 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setBookingOpen(false);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="booking-title"
+            className="relative flex h-[min(760px,calc(100vh-2rem))] w-full max-w-3xl flex-col overflow-hidden rounded-lg border border-border bg-card shadow-2xl"
+          >
+            <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-7">
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  Schedule a call
+                </p>
+                <h2 id="booking-title" className="mt-1 text-lg font-semibold">
+                  Let&apos;s find a time to talk.
+                </h2>
+              </div>
+              <button
+                type="button"
+                aria-label="Close booking dialog"
+                onClick={() => setBookingOpen(false)}
+                className="grid size-9 place-items-center rounded-md border border-border text-xl text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                ×
+              </button>
+            </div>
+            <iframe
+              title="Book a discovery call with GCOAM Software"
+              src="https://calendly.com/contact-gcoam/30min?hide_gdpr_banner=1"
+              className="min-h-0 flex-1 border-0 bg-white"
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
