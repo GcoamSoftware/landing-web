@@ -974,31 +974,23 @@ function FinalCta() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-title"
-            className="relative flex h-[min(820px,calc(100vh-2rem))] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_24px_90px_rgba(0,0,0,0.55)]"
+            className="relative h-[min(860px,calc(100vh-1.5rem))] w-full max-w-5xl overflow-hidden rounded-lg shadow-[0_24px_90px_rgba(0,0,0,0.55)]"
           >
-            <div className="flex items-center justify-between border-b border-border bg-card px-5 py-4 sm:px-7">
-              <div>
-                <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
-                  <span className="size-1.5 rounded-full bg-primary" />
-                  Schedule a call
-                </p>
-                <h2 id="booking-title" className="mt-1.5 text-lg font-semibold sm:text-xl">
-                  Let&apos;s find a time to talk.
-                </h2>
-              </div>
-              <button
-                type="button"
-                aria-label="Close booking dialog"
-                onClick={() => setBookingOpen(false)}
-                className="grid size-10 place-items-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                <X className="size-4" />
-              </button>
-            </div>
+            <h2 id="booking-title" className="sr-only">
+              Book a discovery call with GCOAM Software
+            </h2>
+            <button
+              type="button"
+              aria-label="Close booking dialog"
+              onClick={() => setBookingOpen(false)}
+              className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-black/10 text-slate-700 backdrop-blur-sm transition-colors hover:bg-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <X className="size-5" />
+            </button>
             <iframe
               title="Book a discovery call with GCOAM Software"
               src="https://calendly.com/contact-gcoam/30min?hide_gdpr_banner=1&background_color=f8fafc&text_color=101828&primary_color=8472fe"
-              className="min-h-0 flex-1 border-0 bg-slate-50"
+              className="size-full border-0 bg-slate-50"
             />
           </motion.div>
         </motion.div>
