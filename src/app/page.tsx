@@ -962,7 +962,7 @@ function FinalCta() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] grid place-items-center bg-background/90 p-3 backdrop-blur-md sm:p-6"
+          className="fixed inset-0 z-[100] grid place-items-center bg-black/35 p-3 backdrop-blur-xl sm:p-6"
           role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setBookingOpen(false);
@@ -983,7 +983,7 @@ function FinalCta() {
               type="button"
               aria-label="Close booking dialog"
               onClick={() => setBookingOpen(false)}
-              className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-black/10 text-slate-700 backdrop-blur-sm transition-colors hover:bg-black/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="absolute right-3 top-3 z-10 grid size-10 place-items-center rounded-full bg-transparent text-slate-700 transition-colors hover:bg-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <X className="size-5" />
             </button>
