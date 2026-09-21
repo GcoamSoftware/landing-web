@@ -3,7 +3,7 @@
 import {
   AnimatePresence,
   motion,
-  useInView,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -580,6 +580,7 @@ type ProcessStepProps = {
   copy: string;
   icon: ComponentType<{ className?: string }>;
   index: number;
+  active: boolean;
 };
 
 function ProcessStep({
@@ -588,13 +589,10 @@ function ProcessStep({
   copy,
   icon: Icon,
   index,
+  active,
 }: ProcessStepProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const active = useInView(ref, { margin: "-38% 0px -38% 0px" });
-
   return (
     <motion.div
-      ref={ref}
       data-cursor
       className="group relative grid grid-cols-[5rem_1fr] gap-5 md:block"
       initial={{ opacity: 0, y: 24 }}
@@ -607,25 +605,42 @@ function ProcessStep({
       }}
     >
       <div
-        className={`relative z-10 grid size-20 place-items-center rounded-full border bg-background transition-all duration-500 md:mb-10 md:size-24 ${active ? "border-primary shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_22%,transparent)]" : "border-border group-hover:border-primary group-hover:shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_22%,transparent)]"}`}
+        className={`relative z-10 grid size-20 place-items-center rounded-full border bg-background transition-all duration-500 md:mb-10 md:size-24 ${
+          active
+            ? "border-primary shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
+            : "border-border"
+        }`}
       >
         <div
-          className={`grid size-12 place-items-center rounded-full border bg-secondary transition-all duration-500 md:size-14 ${active ? "border-primary/45 bg-primary/10" : "border-border group-hover:border-primary/45 group-hover:bg-primary/10"}`}
+          className={`grid size-12 place-items-center rounded-full border bg-secondary transition-all duration-500 md:size-14 ${
+            active
+              ? "border-primary/45 bg-primary/10"
+              : "border-border"
+          }`}
         >
           <Icon
-            className={`size-5 transition-all duration-500 md:size-6 ${active ? "scale-110 text-primary" : "text-muted-foreground group-hover:scale-110 group-hover:text-primary"}`}
+            className={`size-5 transition-all duration-500 md:size-6 ${
+              active
+                ? "scale-110 text-primary"
+                : "text-muted-foreground"
+            }`}
           />
         </div>
       </div>
+
       <div
-        className={`pb-10 transition-opacity duration-500 md:pb-0 ${active ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}
+        className={`pb-10 transition-opacity duration-500 md:pb-0 ${
+          active ? "opacity-100" : "opacity-50"
+        }`}
       >
         <span className="font-mono text-xs font-semibold text-primary">
           {num}
         </span>
+
         <h3 className="mt-4 text-lg font-semibold uppercase text-foreground">
           {title}
         </h3>
+
         <p className="mt-3 max-w-[17rem] text-sm leading-6 text-muted-foreground">
           {copy}
         </p>
@@ -662,34 +677,77 @@ function Process() {
     },
   ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const [activeStep, setActiveStep] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  const lineProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    let nextStep = 0;
+
+    if (latest >= 0.99) {
+      nextStep = 3;
+    } else if (latest >= 0.66) {
+      nextStep = 2;
+    } else if (latest >= 0.33) {
+      nextStep = 1;
+    }
+
+    setActiveStep(nextStep);
+  });
+
   return (
     <section
+      ref={sectionRef}
       id="process"
-      className="mx-auto max-w-[1440px] px-5 py-24 sm:px-8 lg:px-12 lg:py-36"
+      className="relative mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12"
     >
-      <SectionHeading eyebrow="How we work" title="From idea to impact." />
-      <div className="relative mt-16 md:mt-20">
-        <div className="absolute bottom-10 left-10 top-10 w-px bg-border md:bottom-auto md:left-0 md:right-0 md:top-12 md:h-px md:w-auto" />
-        <motion.div
-          aria-hidden
-          className="absolute left-10 top-10 h-[calc(100%_-_5rem)] w-px origin-top bg-primary md:hidden"
-          initial={{ scaleY: 0 }}
-          whileInView={{ scaleY: 1 }}
-          viewport={{ once: true, margin: "-25%" }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <motion.div
-          aria-hidden
-          className="absolute left-0 right-0 top-12 hidden h-px origin-left bg-primary md:block"
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: "-25%" }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <div className="relative grid gap-2 md:grid-cols-4 md:gap-7">
-          {steps.map((step, index) => (
-            <ProcessStep key={step.num} {...step} index={index} />
-          ))}
+      <div className="relative min-h-[300vh]">
+        <div className="sticky top-0 flex min-h-screen items-center py-20">
+          <div className="w-full">
+            <SectionHeading
+              eyebrow="How we work"
+              title="From idea to impact."
+            />
+
+            <div className="relative mt-16 md:mt-20">
+              {/* Base line */}
+              <div className="absolute bottom-10 left-10 top-10 w-px bg-border md:bottom-auto md:left-0 md:right-0 md:top-12 md:h-px md:w-auto" />
+
+              {/* Scroll-driven progress line */}
+              <motion.div
+                aria-hidden
+                className="absolute left-10 top-10 h-[calc(100%_-_5rem)] w-px origin-top bg-primary shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_55%,transparent)] md:hidden"
+                style={{ scaleY: lineProgress }}
+              />
+
+              <motion.div
+                aria-hidden
+                className="absolute left-0 right-0 top-12 hidden h-px origin-left bg-primary shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_55%,transparent)] md:block"
+                style={{ scaleX: lineProgress }}
+              />
+
+              <div className="relative grid gap-2 md:grid-cols-4 md:gap-7">
+                {steps.map((step, index) => (
+                  <ProcessStep
+                    key={step.num}
+                    {...step}
+                    index={index}
+                    active={index <= activeStep}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
