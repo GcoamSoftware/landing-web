@@ -700,6 +700,7 @@ function ProjectVisual({ type }: { type: string }) {
   return (
     <div className="relative aspect-[16/10] overflow-hidden border-b border-border bg-secondary p-5 sm:p-8">
       <div className="technical-grid absolute inset-0 opacity-30" />
+
       <div className="relative h-full rounded-md border border-border bg-background/90 p-4 transition-transform duration-500 group-hover:scale-[1.015]">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <div className="flex gap-1.5">
@@ -707,20 +708,25 @@ function ProjectVisual({ type }: { type: string }) {
             <i className="size-1.5 rounded-full bg-muted-foreground" />
             <i className="size-1.5 rounded-full bg-muted-foreground" />
           </div>
+
           <span className="text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
             System / {type}
           </span>
         </div>
-        {type === "ops" ? (
+
+        {/* OPERATIONS */}
+        {type === "ops" && (
           <div className="mt-5 grid h-[70%] grid-cols-3 gap-3">
             <div className="rounded border border-border bg-card p-3">
               <div className="h-2 w-12 bg-primary/60" />
+
               <div className="mt-5 space-y-2">
                 {[1, 2, 3, 4].map((x) => (
                   <div key={x} className="h-1.5 bg-muted" />
                 ))}
               </div>
             </div>
+
             <div className="col-span-2 grid grid-rows-2 gap-3">
               <div className="rounded border border-border bg-card p-3">
                 <div className="flex h-full items-end gap-2">
@@ -733,26 +739,90 @@ function ProjectVisual({ type }: { type: string }) {
                   ))}
                 </div>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded border border-border bg-card" />
                 <div className="rounded border border-border bg-card" />
               </div>
             </div>
           </div>
-        ) : (
+        )}
+
+        {/* AI */}
+        {type === "ai" && (
           <div className="mt-5 grid h-[70%] place-items-center">
             <div className="relative grid size-36 place-items-center rounded-full border border-primary/30">
-              <div className="absolute inset-4 rounded-full border border-dashed border-brand-blue/50" />
-              <Cpu className="size-9 text-primary" />
-              {[0, 1, 2, 3].map((i) => (
-                <span
-                  key={i}
-                  className="absolute size-2 rounded-full bg-brand-blue"
-                  style={{
-                    transform: `rotate(${i * 90}deg) translateY(-72px)`,
-                  }}
-                />
-              ))}
+              <div className="absolute inset-4 rounded-full border border-dashed border-primary/40" />
+
+              <div className="grid size-16 place-items-center rounded-full border border-primary/30 bg-primary/10">
+                <Sparkles className="size-8 text-primary" />
+              </div>
+
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                Knowledge
+              </span>
+
+              <span className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                Answers
+              </span>
+
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                AI
+              </span>
+
+              <span className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                Data
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* SAAS */}
+        {type === "saas" && (
+          <div className="mt-5 grid h-[70%] grid-cols-[70px_1fr] gap-3">
+            {/* Sidebar */}
+            <div className="rounded border border-border bg-card p-2">
+              <div className="mb-4 h-2 w-8 bg-primary/60" />
+
+              <div className="space-y-2">
+                <div className="h-1.5 w-full rounded bg-primary/40" />
+                <div className="h-1.5 w-4/5 rounded bg-muted" />
+                <div className="h-1.5 w-full rounded bg-muted" />
+                <div className="h-1.5 w-3/4 rounded bg-muted" />
+                <div className="h-1.5 w-full rounded bg-muted" />
+              </div>
+            </div>
+
+            {/* Dashboard */}
+            <div className="grid grid-rows-[auto_1fr] gap-3">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="rounded border border-border bg-card p-2">
+                  <div className="h-1.5 w-8 bg-muted" />
+                  <div className="mt-3 h-3 w-12 bg-primary/50" />
+                </div>
+
+                <div className="rounded border border-border bg-card p-2">
+                  <div className="h-1.5 w-8 bg-muted" />
+                  <div className="mt-3 h-3 w-10 bg-primary/30" />
+                </div>
+
+                <div className="rounded border border-border bg-card p-2">
+                  <div className="h-1.5 w-8 bg-muted" />
+                  <div className="mt-3 h-3 w-8 bg-primary/50" />
+                </div>
+              </div>
+
+              <div className="rounded border border-border bg-card p-3">
+                <div className="flex h-full items-end gap-2">
+                  {[45, 60, 40, 75, 55, 85, 65, 92].map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 rounded-t bg-primary/30"
+                      style={{ height: `${h}%` }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -1067,13 +1137,17 @@ function Index() {
       <main>
         <Hero />
         <div className="overflow-hidden border-b border-border bg-secondary py-5">
-          <div className="animate-marquee flex w-max items-center">
-            {[...capabilities, ...capabilities].map((x, i) => (
-              <div key={`${x}-${i}`} className="flex items-center">
+          <div className="animate-marquee flex w-max">
+            {[...capabilities, ...capabilities, ...capabilities].map((x, i) => (
+              <div
+                key={`${x}-${i}`}
+                className="flex shrink-0 items-center"
+              >
                 <span className="px-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {x}
                 </span>
-                <span className="size-1 rounded-full bg-primary/70" />
+
+                <span className="size-1 shrink-0 rounded-full bg-primary/70" />
               </div>
             ))}
           </div>
