@@ -186,8 +186,12 @@
 }
 
 @keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
   to {
-    transform: translateX(-50%);
+    transform: translateX(-33.333333%);
   }
 }
 
@@ -217,8 +221,8 @@
 
 @utility animate-marquee {
   animation: marquee 28s linear infinite;
+  will-change: transform;
 }
-
 @utility animate-pulse-line {
   animation: pulse-line 2.8s ease-in-out infinite;
 }

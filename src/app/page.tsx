@@ -3,7 +3,7 @@
 import {
   AnimatePresence,
   motion,
-  useInView,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -580,6 +580,7 @@ type ProcessStepProps = {
   copy: string;
   icon: ComponentType<{ className?: string }>;
   index: number;
+  active: boolean;
 };
 
 function ProcessStep({
@@ -588,13 +589,10 @@ function ProcessStep({
   copy,
   icon: Icon,
   index,
+  active,
 }: ProcessStepProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const active = useInView(ref, { margin: "-38% 0px -38% 0px" });
-
   return (
     <motion.div
-      ref={ref}
       data-cursor
       className="group relative grid grid-cols-[5rem_1fr] gap-5 md:block"
       initial={{ opacity: 0, y: 24 }}
@@ -607,25 +605,42 @@ function ProcessStep({
       }}
     >
       <div
-        className={`relative z-10 grid size-20 place-items-center rounded-full border bg-background transition-all duration-500 md:mb-10 md:size-24 ${active ? "border-primary shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_22%,transparent)]" : "border-border group-hover:border-primary group-hover:shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_22%,transparent)]"}`}
+        className={`relative z-10 grid size-20 place-items-center rounded-full border bg-background transition-all duration-500 md:mb-10 md:size-24 ${
+          active
+            ? "border-primary shadow-[0_0_28px_color-mix(in_oklab,var(--primary)_35%,transparent)]"
+            : "border-border"
+        }`}
       >
         <div
-          className={`grid size-12 place-items-center rounded-full border bg-secondary transition-all duration-500 md:size-14 ${active ? "border-primary/45 bg-primary/10" : "border-border group-hover:border-primary/45 group-hover:bg-primary/10"}`}
+          className={`grid size-12 place-items-center rounded-full border bg-secondary transition-all duration-500 md:size-14 ${
+            active
+              ? "border-primary/45 bg-primary/10"
+              : "border-border"
+          }`}
         >
           <Icon
-            className={`size-5 transition-all duration-500 md:size-6 ${active ? "scale-110 text-primary" : "text-muted-foreground group-hover:scale-110 group-hover:text-primary"}`}
+            className={`size-5 transition-all duration-500 md:size-6 ${
+              active
+                ? "scale-110 text-primary"
+                : "text-muted-foreground"
+            }`}
           />
         </div>
       </div>
+
       <div
-        className={`pb-10 transition-opacity duration-500 md:pb-0 ${active ? "opacity-100" : "opacity-70 group-hover:opacity-100"}`}
+        className={`pb-10 transition-opacity duration-500 md:pb-0 ${
+          active ? "opacity-100" : "opacity-50"
+        }`}
       >
         <span className="font-mono text-xs font-semibold text-primary">
           {num}
         </span>
+
         <h3 className="mt-4 text-lg font-semibold uppercase text-foreground">
           {title}
         </h3>
+
         <p className="mt-3 max-w-[17rem] text-sm leading-6 text-muted-foreground">
           {copy}
         </p>
@@ -662,34 +677,77 @@ function Process() {
     },
   ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const [activeStep, setActiveStep] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  const lineProgress = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 24,
+    restDelta: 0.001,
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    let nextStep = 0;
+
+    if (latest >= 0.99) {
+      nextStep = 3;
+    } else if (latest >= 0.66) {
+      nextStep = 2;
+    } else if (latest >= 0.33) {
+      nextStep = 1;
+    }
+
+    setActiveStep(nextStep);
+  });
+
   return (
     <section
+      ref={sectionRef}
       id="process"
-      className="mx-auto max-w-[1440px] px-5 py-24 sm:px-8 lg:px-12 lg:py-36"
+      className="relative mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-12"
     >
-      <SectionHeading eyebrow="How we work" title="From idea to impact." />
-      <div className="relative mt-16 md:mt-20">
-        <div className="absolute bottom-10 left-10 top-10 w-px bg-border md:bottom-auto md:left-0 md:right-0 md:top-12 md:h-px md:w-auto" />
-        <motion.div
-          aria-hidden
-          className="absolute left-10 top-10 h-[calc(100%_-_5rem)] w-px origin-top bg-primary md:hidden"
-          initial={{ scaleY: 0 }}
-          whileInView={{ scaleY: 1 }}
-          viewport={{ once: true, margin: "-25%" }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <motion.div
-          aria-hidden
-          className="absolute left-0 right-0 top-12 hidden h-px origin-left bg-primary md:block"
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: "-25%" }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <div className="relative grid gap-2 md:grid-cols-4 md:gap-7">
-          {steps.map((step, index) => (
-            <ProcessStep key={step.num} {...step} index={index} />
-          ))}
+      <div className="relative min-h-[300vh]">
+        <div className="sticky top-0 flex min-h-screen items-center py-20">
+          <div className="w-full">
+            <SectionHeading
+              eyebrow="How we work"
+              title="From idea to impact."
+            />
+
+            <div className="relative mt-16 md:mt-20">
+              {/* Base line */}
+              <div className="absolute bottom-10 left-10 top-10 w-px bg-border md:bottom-auto md:left-0 md:right-0 md:top-12 md:h-px md:w-auto" />
+
+              {/* Scroll-driven progress line */}
+              <motion.div
+                aria-hidden
+                className="absolute left-10 top-10 h-[calc(100%_-_5rem)] w-px origin-top bg-primary shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_55%,transparent)] md:hidden"
+                style={{ scaleY: lineProgress }}
+              />
+
+              <motion.div
+                aria-hidden
+                className="absolute left-0 right-0 top-12 hidden h-px origin-left bg-primary shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_55%,transparent)] md:block"
+                style={{ scaleX: lineProgress }}
+              />
+
+              <div className="relative grid gap-2 md:grid-cols-4 md:gap-7">
+                {steps.map((step, index) => (
+                  <ProcessStep
+                    key={step.num}
+                    {...step}
+                    index={index}
+                    active={index <= activeStep}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -700,6 +758,7 @@ function ProjectVisual({ type }: { type: string }) {
   return (
     <div className="relative aspect-[16/10] overflow-hidden border-b border-border bg-secondary p-5 sm:p-8">
       <div className="technical-grid absolute inset-0 opacity-30" />
+
       <div className="relative h-full rounded-md border border-border bg-background/90 p-4 transition-transform duration-500 group-hover:scale-[1.015]">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <div className="flex gap-1.5">
@@ -707,20 +766,25 @@ function ProjectVisual({ type }: { type: string }) {
             <i className="size-1.5 rounded-full bg-muted-foreground" />
             <i className="size-1.5 rounded-full bg-muted-foreground" />
           </div>
+
           <span className="text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
             System / {type}
           </span>
         </div>
-        {type === "ops" ? (
+
+        {/* OPERATIONS */}
+        {type === "ops" && (
           <div className="mt-5 grid h-[70%] grid-cols-3 gap-3">
             <div className="rounded border border-border bg-card p-3">
               <div className="h-2 w-12 bg-primary/60" />
+
               <div className="mt-5 space-y-2">
                 {[1, 2, 3, 4].map((x) => (
                   <div key={x} className="h-1.5 bg-muted" />
                 ))}
               </div>
             </div>
+
             <div className="col-span-2 grid grid-rows-2 gap-3">
               <div className="rounded border border-border bg-card p-3">
                 <div className="flex h-full items-end gap-2">
@@ -733,26 +797,90 @@ function ProjectVisual({ type }: { type: string }) {
                   ))}
                 </div>
               </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded border border-border bg-card" />
                 <div className="rounded border border-border bg-card" />
               </div>
             </div>
           </div>
-        ) : (
+        )}
+
+        {/* AI */}
+        {type === "ai" && (
           <div className="mt-5 grid h-[70%] place-items-center">
             <div className="relative grid size-36 place-items-center rounded-full border border-primary/30">
-              <div className="absolute inset-4 rounded-full border border-dashed border-brand-blue/50" />
-              <Cpu className="size-9 text-primary" />
-              {[0, 1, 2, 3].map((i) => (
-                <span
-                  key={i}
-                  className="absolute size-2 rounded-full bg-brand-blue"
-                  style={{
-                    transform: `rotate(${i * 90}deg) translateY(-72px)`,
-                  }}
-                />
-              ))}
+              <div className="absolute inset-4 rounded-full border border-dashed border-primary/40" />
+
+              <div className="grid size-16 place-items-center rounded-full border border-primary/30 bg-primary/10">
+                <Sparkles className="size-8 text-primary" />
+              </div>
+
+              <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                Knowledge
+              </span>
+
+              <span className="absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                Answers
+              </span>
+
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                AI
+              </span>
+
+              <span className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded border border-border bg-card px-2 py-1 text-[8px] uppercase tracking-wider text-muted-foreground">
+                Data
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* SAAS */}
+        {type === "saas" && (
+          <div className="mt-5 grid h-[70%] grid-cols-[70px_1fr] gap-3">
+            {/* Sidebar */}
+            <div className="rounded border border-border bg-card p-2">
+              <div className="mb-4 h-2 w-8 bg-primary/60" />
+
+              <div className="space-y-2">
+                <div className="h-1.5 w-full rounded bg-primary/40" />
+                <div className="h-1.5 w-4/5 rounded bg-muted" />
+                <div className="h-1.5 w-full rounded bg-muted" />
+                <div className="h-1.5 w-3/4 rounded bg-muted" />
+                <div className="h-1.5 w-full rounded bg-muted" />
+              </div>
+            </div>
+
+            {/* Dashboard */}
+            <div className="grid grid-rows-[auto_1fr] gap-3">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="rounded border border-border bg-card p-2">
+                  <div className="h-1.5 w-8 bg-muted" />
+                  <div className="mt-3 h-3 w-12 bg-primary/50" />
+                </div>
+
+                <div className="rounded border border-border bg-card p-2">
+                  <div className="h-1.5 w-8 bg-muted" />
+                  <div className="mt-3 h-3 w-10 bg-primary/30" />
+                </div>
+
+                <div className="rounded border border-border bg-card p-2">
+                  <div className="h-1.5 w-8 bg-muted" />
+                  <div className="mt-3 h-3 w-8 bg-primary/50" />
+                </div>
+              </div>
+
+              <div className="rounded border border-border bg-card p-3">
+                <div className="flex h-full items-end gap-2">
+                  {[45, 60, 40, 75, 55, 85, 65, 92].map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex-1 rounded-t bg-primary/30"
+                      style={{ height: `${h}%` }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -1067,13 +1195,17 @@ function Index() {
       <main>
         <Hero />
         <div className="overflow-hidden border-b border-border bg-secondary py-5">
-          <div className="animate-marquee flex w-max items-center">
-            {[...capabilities, ...capabilities].map((x, i) => (
-              <div key={`${x}-${i}`} className="flex items-center">
+          <div className="animate-marquee flex w-max">
+            {[...capabilities, ...capabilities, ...capabilities].map((x, i) => (
+              <div
+                key={`${x}-${i}`}
+                className="flex shrink-0 items-center"
+              >
                 <span className="px-8 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {x}
                 </span>
-                <span className="size-1 rounded-full bg-primary/70" />
+
+                <span className="size-1 shrink-0 rounded-full bg-primary/70" />
               </div>
             ))}
           </div>
