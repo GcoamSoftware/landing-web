@@ -1160,10 +1160,10 @@ function Footer() {
             </a>
           </div>
           <div className="flex gap-5 text-sm text-muted-foreground">
-            <a href="#contact" className="hover:text-foreground">
+            <a href="https://www.linkedin.com/company/gcoam-software/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
               LinkedIn
             </a>
-            <a href="mailto:hello@gcoam.com" className="hover:text-foreground">
+            <a href="mailto:contact@gcoam.in" className="hover:text-foreground">
               Email
             </a>
           </div>
